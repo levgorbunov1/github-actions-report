@@ -1,7 +1,11 @@
 import os
+import glob
 import subprocess
 from pathlib import Path
-import glob
+import json
+from dataclasses import asdict
+from data.repository_actions import GitHubAction, Workflow, RepositoryActions
+
 
 def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:   
     cloned_repo_dir = f"{clone_dir}/{repo_url.rstrip("/").split("/")[-1]}"
@@ -28,6 +32,7 @@ def find_workflow_files(repo_path: str) -> list[Path]:
 
 def analyze_github_actions(repo_url: str) -> tuple[list[str], list[str]]:
     repo_path = clone_repo(repo_url)
+
     workflow_files = find_workflow_files(repo_path)
 
 
