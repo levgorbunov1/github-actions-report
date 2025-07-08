@@ -11,9 +11,4 @@ pip install -r requirements.txt
 
 ### Run script
  
- `python main.py `
-
- ### Feature Ideas
- - ThreadPools for asynchronous task processing to boost performance.
- - Handling reusable workflows.
- - Handling duplicate actions in a workflow.
+ `python main.py`
