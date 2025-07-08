@@ -1,4 +1,4 @@
-# github-actions-report
+# GitHub Actions Report
 Produces a report, displaying data on which GitHub Actions and Workflows are being used across your repositories.
 
 ### venv setup 
