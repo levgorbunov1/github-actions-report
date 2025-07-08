@@ -13,6 +13,10 @@ pip install -r requirements.txt
  
  `python main.py`
 
+## Unit tests
+
+ `python -m unittest test_main.py`
+
 ### Feature Ideas
 
 - ThreadPools for asynchronous task processing to boost performance.
