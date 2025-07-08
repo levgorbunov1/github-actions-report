@@ -16,7 +16,7 @@ def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:
         subprocess.run(["rm", "-rf", cloned_repo_dir], check=True)
 
     print(f"Cloning {repo_url} to {cloned_repo_dir}")     
-    subprocess.run(["git", "clone", repo_url, cloned_repo_dir], check=True)
+    subprocess.run(["git", "clone", "--depth", "1", repo_url, cloned_repo_dir], check=True)
 
     return cloned_repo_dir
 
@@ -69,12 +69,15 @@ def analyze_github_actions(repo_url: str) -> RepositoryActions:
 
 
 if __name__ == "__main__":
-    repo_url = "https://github.com/levgorbunov1/my-eks-cluster"
+    repositories = [
+        "https://github.com/levgorbunov1/my-eks-cluster",
+        "https://github.com/alphagov/tech-docs-monitor",
+        "https://github.com/alphagov/govuk-infrastructure"
+    ]
 
-    repository_actions = analyze_github_actions(repo_url)
+    for repo in repositories:
+        repository_actions = analyze_github_actions(repo)
 
-    repo_json = json.dumps(asdict(repository_actions), indent=2)
+        repo_json = json.dumps(asdict(repository_actions), indent=2)
 
-    print(f"✅ Repository Actions for {repo_url}:")
-    print(repo_json)
-
+        print(f"✅ Repository Actions for {repo}:\n\n{repo_json}")
