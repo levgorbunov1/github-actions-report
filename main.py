@@ -3,6 +3,7 @@ import glob
 import subprocess
 from pathlib import Path
 import json
+import yaml
 from dataclasses import asdict
 from data.repository_actions import GitHubAction, Workflow, RepositoryActions
 
@@ -19,7 +20,7 @@ def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:
 
     return cloned_repo_dir
 
-def find_workflow_files(repo_path: str) -> list[Path]:
+def find_workflow_files(repo_path: str) -> list[str]:
     workflows_path = repo_path + "/.github/workflows"
 
     if not Path(workflows_path).exists():
@@ -30,12 +31,50 @@ def find_workflow_files(repo_path: str) -> list[Path]:
 
     return list(glob.glob(workflows_path + "/*.yml")) + list(glob.glob(workflows_path + "/*.yaml"))
 
-def analyze_github_actions(repo_url: str) -> tuple[list[str], list[str]]:
+def parse_workflow(file_path: str) -> Workflow:
+    workflow_name = Path(file_path).stem
+
+    actions = []
+
+    try:
+        with open(file_path, 'r') as f:
+            data = yaml.safe_load(f)
+
+            for job in data.get("jobs", {}).values():
+                for step in job.get("steps", []):
+                    uses = step.get("uses")
+
+                    if uses:
+                        name, version = uses.split("@", 1)
+                        actions.append(GitHubAction(name=name, version=version))
+
+            return Workflow(name=workflow_name, actions=actions)
+
+    except yaml.YAMLError as e:
+        raise Exception(f"Error parsing {file_path}: {e}")
+
+def analyze_github_actions(repo_url: str) -> RepositoryActions:
     repo_path = clone_repo(repo_url)
+    repo_name = repo_url.rstrip("/").split("/")[-1]
 
     workflow_files = find_workflow_files(repo_path)
+
+    workflows = []
+
+    for wf_file in workflow_files:
+        workflow = parse_workflow(wf_file)
+        workflows.append(workflow)
+
+    return RepositoryActions(repository=repo_name, workflows=workflows)
 
 
 if __name__ == "__main__":
     repo_url = "https://github.com/levgorbunov1/my-eks-cluster"
-    analyze_github_actions(repo_url)
+
+    repository_actions = analyze_github_actions(repo_url)
+
+    repo_json = json.dumps(asdict(repository_actions), indent=2)
+
+    print(f"✅ Repository Actions for {repo_url}:")
+    print(repo_json)
+
