@@ -6,6 +6,7 @@ import json
 import yaml
 from dataclasses import asdict
 from data.repository_actions import GitHubAction, Workflow, RepositoryActions
+from config import target_repositories
 
 
 def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:   
@@ -69,11 +70,7 @@ def analyze_github_actions(repo_url: str) -> RepositoryActions:
 
 
 if __name__ == "__main__":
-    repositories = [
-        "https://github.com/levgorbunov1/my-eks-cluster",
-        "https://github.com/alphagov/tech-docs-monitor",
-        "https://github.com/alphagov/govuk-infrastructure"
-    ]
+    repositories = target_repositories
 
     for repo in repositories:
         repository_actions = analyze_github_actions(repo)
