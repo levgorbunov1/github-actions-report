@@ -10,10 +10,14 @@ pip install -r requirements.txt
 ```
 
 ### Run script
- 
- `python main.py`
 
-## Unit tests
+Configure list of [target repositories](config.py)
+
+To run the script:
+
+`python main.py`
+
+### Unit tests
 
  `python -m unittest test_main.py`
 
