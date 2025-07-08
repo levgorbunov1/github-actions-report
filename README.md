@@ -11,9 +11,8 @@ pip install -r requirements.txt
 
 ### Run script
 
-Configure list of [target repositories](config.py)
-
-To run the script:
+- Configure list of [target repositories](config.py).
+- Run the script:
 
 `python main.py`
 
