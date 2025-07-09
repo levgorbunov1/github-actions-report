@@ -1,11 +1,12 @@
 import os
 import glob
 import subprocess
+import pandas as pd
 from pathlib import Path
 import json
 import yaml
 from dataclasses import asdict
-from data.repository_actions import GitHubAction, Workflow, RepositoryActions
+from data.github_action import GitHubAction
 from config import target_repositories
 
 
@@ -32,13 +33,13 @@ def find_workflow_files(repo_path: str) -> list[str]:
 
     return list(glob.glob(workflows_path + "/*.yml")) + list(glob.glob(workflows_path + "/*.yaml"))
 
-def parse_workflow(file_path: str) -> Workflow:
-    workflow_name = Path(file_path).stem
+def parse_workflow(repo_name: str, workflow_path: str) -> list[GitHubAction]:
+    workflow_name = Path(workflow_path).stem
 
     actions = []
 
     try:
-        with open(file_path, 'r') as f:
+        with open(workflow_path, 'r') as f:
             data = yaml.safe_load(f)
 
             for job in data.get("jobs", {}).values():
@@ -47,34 +48,37 @@ def parse_workflow(file_path: str) -> Workflow:
 
                     if uses:
                         name, version = uses.split("@", 1)
-                        actions.append(GitHubAction(name=name, version=version))
+                        actions.append(GitHubAction(repository=repo_name, workflow=workflow_name, name=name, version=version))
 
-            return Workflow(name=workflow_name, actions=actions)
+            return actions
 
     except yaml.YAMLError as e:
         raise Exception(f"Error parsing {file_path}: {e}")
 
-def analyze_github_actions(repo_url: str) -> RepositoryActions:
+def analyze_github_actions(repo_url: str) -> list[GitHubAction]:
     repo_path = clone_repo(repo_url)
-    repo_name = repo_url.rstrip("/").split("/")[-1]
 
     workflow_files = find_workflow_files(repo_path)
 
-    workflows = []
+    actions_all_workflows = []
 
     for wf_file in workflow_files:
-        workflow = parse_workflow(wf_file)
-        workflows.append(workflow)
+        workflow_actions = parse_workflow(repo_url.rstrip("/").split("/")[-1], wf_file)
+        actions_all_workflows += workflow_actions
 
-    return RepositoryActions(repository=repo_name, workflows=workflows)
+    return actions_all_workflows
 
 
 if __name__ == "__main__":
     repositories = target_repositories
 
+    actions_all_repositories = []
+
     for repo in repositories:
         repository_actions = analyze_github_actions(repo)
 
-        repo_json = json.dumps(asdict(repository_actions), indent=2)
+        actions_all_repositories += repository_actions
 
-        print(f"✅ Repository Actions for {repo}:\n\n{repo_json}")
+    df = pd.DataFrame(actions_all_repositories)
+
+    print(df)
