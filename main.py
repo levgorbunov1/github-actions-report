@@ -1,13 +1,16 @@
 import os
 import glob
+import json
 import subprocess
 import pandas as pd
 from pathlib import Path
-import json
 import yaml
 from dataclasses import asdict
+
 from data.github_action import GitHubAction
+from data.graph_config import GraphConfig
 from config import target_repositories
+from functions.graph import plot_data
 
 
 def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:   
@@ -48,12 +51,12 @@ def parse_workflow(repo_name: str, workflow_path: str) -> list[GitHubAction]:
 
                     if uses:
                         name, version = uses.split("@", 1)
-                        actions.append(GitHubAction(repository=repo_name, workflow=workflow_name, name=name, version=version))
+                        actions.append(asdict(GitHubAction(repository=repo_name, workflow=workflow_name, name=name, version=version)))
 
             return actions
 
     except yaml.YAMLError as e:
-        raise Exception(f"Error parsing {file_path}: {e}")
+        raise Exception(f"Error parsing {workflow_path}: {e}")
 
 def analyze_github_actions(repo_url: str) -> list[GitHubAction]:
     repo_path = clone_repo(repo_url)
@@ -81,4 +84,18 @@ if __name__ == "__main__":
 
     df = pd.DataFrame(actions_all_repositories)
 
+    print("Database:")
     print(df)
+
+    plot_data(
+        "select name, version, count(*) as count from df where name in (select distinct name from df limit 4) group by name, version order by name desc;", 
+        GraphConfig(
+            source = df,
+            x = "name",
+            y = "count",
+            color_separation_variable = "version",
+            graph_type = "bar",
+            title = "Distribution of GitHub Actions versions across repositories",
+            output_path = "bar_chart.png"
+        )
+    )

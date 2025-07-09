@@ -1,0 +1,37 @@
+import pandasql as ps
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from data.graph_config import GraphConfig
+
+def plot_data(query: str, config: GraphConfig) -> None:
+    try:
+        print("Graph config:")
+        print(config)
+
+        table = ps.sqldf(query, {'df': config.source})
+
+        print("Table for graph:")
+        print(table)
+
+        plt.figure(figsize=(16, 8))
+        sns.set_theme(style="whitegrid")
+
+        plot = sns.catplot(
+            data=table,
+            x=config.x,
+            y=config.y,
+            hue=config.color_separation_variable,
+            col=config.subplots_variable,
+            kind=config.graph_type,
+            legend_out=True,
+            height=6,
+            aspect=1.5,
+        )
+
+        plot.set_xticklabels(rotation=45, ha='right')             
+        plot.figure.suptitle(config.title)
+
+        plt.savefig(config.output_path, dpi=300, bbox_inches='tight')
+    except Exception as e:
+        print(f"Failed to create graph: {e}")
