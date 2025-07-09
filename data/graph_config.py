@@ -7,8 +7,8 @@ class GraphConfig:
     source: DataFrame
     x: str
     y: str
-    graph_type: str
     title: str
+    graph_type: Optional[str] = None
     color_separation_variable: Optional[str] = None 
     subplots_variable: Optional[str] = None
     output_path: Optional[str] = "graph.png"

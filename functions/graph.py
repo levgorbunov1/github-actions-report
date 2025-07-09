@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from data.graph_config import GraphConfig
 
-def plot_data(query: str, config: GraphConfig) -> None:
+def plot_barchart(query: str, config: GraphConfig) -> None:
     try:
         print("Graph config:")
         print(config)
@@ -35,3 +35,27 @@ def plot_data(query: str, config: GraphConfig) -> None:
         plt.savefig(config.output_path, dpi=300, bbox_inches='tight')
     except Exception as e:
         print(f"Failed to create graph: {e}")
+
+def plot_piechart(query: str, config: GraphConfig) -> None:
+    try:
+        print("Graph config:")
+        print(config)
+
+        table = ps.sqldf(query, {'df': config.source})
+
+        print("Table for graph:")
+        print(table)
+
+        plt.figure(figsize=(16, 8))
+        plt.pie(
+            table[config.y],
+            labels=table[config.x],
+            autopct='%1.0f%%',
+            startangle=140
+        )
+        plt.axis('equal')
+        plt.title(config.title)
+
+        plt.savefig(config.output_path, dpi=300, bbox_inches='tight')
+    except Exception as e:
+        print(f"Failed to create pie chart: {e}")

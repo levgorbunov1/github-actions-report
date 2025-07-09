@@ -10,7 +10,7 @@ from dataclasses import asdict
 from data.github_action import GitHubAction
 from data.graph_config import GraphConfig
 from config import target_repositories
-from functions.graph import plot_data
+from functions.graph import plot_piechart
 
 
 def clone_repo(repo_url: str, clone_dir: str = "cloned_repos") -> str:   
@@ -87,15 +87,13 @@ if __name__ == "__main__":
     print("Database:")
     print(df)
 
-    plot_data(
-        "select name, version, count(*) as count from df where name in (select distinct name from df limit 4) group by name, version order by name desc;", 
+    plot_piechart(
+        "select version, count(*) as count from df where name = 'actions/checkout' group by name, version;", 
         GraphConfig(
             source = df,
-            x = "name",
+            x = "version",
             y = "count",
-            color_separation_variable = "version",
-            graph_type = "bar",
-            title = "Distribution of GitHub Actions versions across repositories",
-            output_path = "bar_chart.png"
+            title = "Variation in actions/checkout version",
+            output_path = "pie_chart.png"
         )
     )
