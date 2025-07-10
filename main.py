@@ -34,16 +34,15 @@ if __name__ == "__main__":
     print("Database:")
     print(df)
 
-    actions_of_interest = ["actions/checkout", "ruby/setup-ruby", "hashicorp/setup-terraform"]
-
-    for action in actions_of_interest:
+    for action in github_service.latest_actions_table["name"].tolist():
         plot_piechart(
-            f"select version, count(*) as count from df where name = '{action}' group by name, version;", 
+            f"select latest, version, count(*) as count from df where name = '{action}' group by name, version;", 
             GraphConfig(
                 source = df,
                 x = "version",
                 y = "count",
-                title = f"Variation in {action} version",
-                output_path = f"graphs/{action.replace("/", "_").replace("-", "_")}_pie_chart.png"
+                title = f"Occurrences of different versions of {action} across repositories",
+                output_path = f"graphs/{action.replace("/", "_").replace("-", "_")}_pie_chart.png",
+                color_separation_variable="latest"
             )
         )

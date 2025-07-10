@@ -27,12 +27,14 @@ class GitHubService():
     def check_action_version(self, name, version):
         try:
             if len(name.split("/")) > 2:
-                name = "/".join(name.split("/")[:2])
+                repo_name = "/".join(name.split("/")[:2])
+            else:
+                repo_name = name
 
             query_result = ps.sqldf(f"select * from df where name = '{name}'", {'df': self.latest_actions_table})
 
             if query_result.empty:
-                latest_tag = self.gh_client.get_repo(name).get_tags()[0]
+                latest_tag = self.gh_client.get_repo(repo_name).get_tags()[0]
 
                 self.latest_actions_table.loc[len(self.latest_actions_table)] = [name, latest_tag.name, latest_tag.commit.sha]
 
