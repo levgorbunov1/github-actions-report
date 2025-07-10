@@ -4,8 +4,7 @@ Produces a report, displaying data on which GitHub Actions and Workflows are bei
 ### venv setup 
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 

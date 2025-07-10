@@ -87,13 +87,16 @@ if __name__ == "__main__":
     print("Database:")
     print(df)
 
-    plot_piechart(
-        "select version, count(*) as count from df where name = 'actions/checkout' group by name, version;", 
-        GraphConfig(
-            source = df,
-            x = "version",
-            y = "count",
-            title = "Variation in actions/checkout version",
-            output_path = "pie_chart.png"
+    actions_of_interest = ["actions/checkout", "ruby/setup-ruby", "hashicorp/setup-terraform"]
+
+    for action in actions_of_interest:
+        plot_piechart(
+            f"select version, count(*) as count from df where name = '{action}' group by name, version;", 
+            GraphConfig(
+                source = df,
+                x = "version",
+                y = "count",
+                title = f"Variation in {action} version",
+                output_path = f"graphs/{action.replace("/", "_").replace("-", "_")}_pie_chart.png"
+            )
         )
-    )
