@@ -6,13 +6,7 @@ from data.graph_config import GraphConfig
 
 def plot_barchart(query: str, config: GraphConfig) -> None:
     try:
-        print("Graph config:")
-        print(config)
-
         table = ps.sqldf(query, {'df': config.source})
-
-        print("Table for graph:")
-        print(table)
 
         plt.figure(figsize=(16, 8))
         sns.set_theme(style="whitegrid")
@@ -38,13 +32,7 @@ def plot_barchart(query: str, config: GraphConfig) -> None:
 
 def plot_piechart(query: str, config: GraphConfig) -> None:
     try:
-        print("Graph config:")
-        print(config)
-
         table = ps.sqldf(query, {'df': config.source})
-
-        print("Table for graph:")
-        print(table)
 
         plt.figure(figsize=(16, 8))
         plt.pie(
