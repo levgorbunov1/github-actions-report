@@ -69,7 +69,7 @@ if __name__ == "__main__":
             layer_2 = "name_version",
             color_separation_variable = "latest",
             title = "GitHub Actions versions across repositories",
-            output_path = "graphs/network_graph.png"
+            output_path = "graphs/z_network_graph.png"
         )
     )
 
