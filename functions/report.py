@@ -9,7 +9,7 @@ def generate_report(images_dir: str, output_md: str):
                 pie_chart_files = [file for file in os.listdir(pie_charts_dir)if file.lower().endswith(".png")]
 
                 if pie_chart_files:
-                    f.write("<table>\n")
+                    f.write("<br><br><table>\n")
                     for i, filename in enumerate(pie_chart_files):
                         if i != 0 and i % 3 == 0:
                             f.write("</tr>\n<tr>\n")
