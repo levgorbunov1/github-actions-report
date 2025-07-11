@@ -21,7 +21,7 @@ def generate_report(images_dir: str, output_md: str):
             other_files = [file for file in os.listdir(images_dir) if file.lower().endswith(".png")]
 
             for filename in other_files:
-                f.write(f"![{filename}]({os.path.join(images_dir, filename).replace("\\", "/")})\n\n")
+                f.write(f"\n\n\n\n![{filename}]({os.path.join(images_dir, filename).replace("\\", "/")})\n\n")
 
         print(f"Markdown report generated: {output_md}")
     except Exception as e:
