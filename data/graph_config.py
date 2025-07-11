@@ -13,3 +13,12 @@ class GraphConfig:
     subplots_variable: Optional[str] = None
     output_path: Optional[str] = "graph.png"
 
+@dataclass
+class NetworkGraphConfig:
+    source: DataFrame
+    root_node: str
+    layer_1: str
+    layer_2: str
+    title: str
+    color_separation_variable: Optional[str] = None 
+    output_path: Optional[str] = "network_graph.png"

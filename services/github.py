@@ -12,7 +12,7 @@ class GitHubService():
         self.latest_actions_table = pd.DataFrame(columns=['name', 'tag', 'sha'])
         self.gh_client = Github(token)
 
-    def clone_repo(self, repo_url: str, clone_dir: str = "cloned_repos") -> str:   
+    def clone_repo(self, repo_url: str, clone_dir: str) -> str:   
         cloned_repo_dir = f"{clone_dir}/{repo_url.rstrip("/").split("/")[-1]}"
 
         if os.path.exists(cloned_repo_dir):
