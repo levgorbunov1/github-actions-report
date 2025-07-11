@@ -5,9 +5,5 @@
 </tr>
 </table>
 
-
-
-
-
-![network_graph.png](graphs/network_graph.png)
+<br><br><br><br>![network_graph.png](graphs/network_graph.png)
 

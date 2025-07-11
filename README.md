@@ -1,6 +1,8 @@
 # GitHub Actions Report
 Produces a report, displaying data on which GitHub Actions and Workflows are being used across your repositories.
 
+You can see the report [here](github_actions_report.md).
+
 ### venv setup 
 
 ```bash
@@ -20,9 +22,3 @@ Export your GitHub token that you want to use with the GitHub REST API: `export 
 ### Unit tests
 
  `python -m unittest test_main.py`
-
-### Feature Ideas
-
-- ThreadPools for asynchronous task processing to boost performance.
-- Handling reusable workflows.
-- Handling duplicate actions in a workflow.
