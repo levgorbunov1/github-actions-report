@@ -7,6 +7,7 @@ from functions.graph import plot_piechart, plot_network
 from services.github import GitHubService
 import functions.workflow as workflow
 from functions.utility import cleanup
+from functions.report import generate_report
 
 if __name__ == "__main__":
     github_token = os.environ.get("GITHUB_TOKEN")
@@ -71,3 +72,5 @@ if __name__ == "__main__":
             output_path = "graphs/network_graph.png"
         )
     )
+
+    generate_report("graphs", "github_actions_report.md")
