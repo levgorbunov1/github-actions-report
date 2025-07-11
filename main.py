@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 x = "version",
                 y = "count",
                 title = f"Occurrences of different versions of {action} across repositories",
-                output_path = f"graphs/{action.replace("/", "_").replace("-", "_")}_pie_chart.png",
+                output_path = f"graphs/pie_charts/{action.replace("/", "_").replace("-", "_")}_pie_chart.png",
                 color_separation_variable="latest"
             )
         )
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             layer_2 = "name_version",
             color_separation_variable = "latest",
             title = "GitHub Actions versions across repositories",
-            output_path = "graphs/z_network_graph.png"
+            output_path = "graphs/network_graph.png"
         )
     )
 
